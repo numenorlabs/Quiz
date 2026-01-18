@@ -168,7 +168,7 @@
         }
 
         .answer-option input[type="radio"] {
-            margin-right: 10px;
+            display: none;
         }
 
         .results-table {
@@ -399,7 +399,8 @@
                 const radioId = `q${currentQuestion}_p${pIdx}_o${oIdx}`;
                 const $option = $(`
                         <div class="answer-option" data-participant="${pIdx}" data-option="${oIdx}">
-                            ${choiceLabel[oIdx]}
+                            <input type="radio" name="q${currentQuestion}_p${pIdx}" id="${radioId}" value="${oIdx}">
+                            <label for="${radioId}">${choiceLabel[oIdx]}</label>
                         </div>
                     `);
                 $optionsDiv.append($option);
@@ -414,6 +415,7 @@
             const participant = $this.data('participant');
             $(`.answer-option[data-participant="${participant}"]`).removeClass('selected');
             $this.addClass('selected');
+            $this.find('input[type="radio"]').prop('checked', true);
         });
 
         $('.question-screen').addClass('active');
