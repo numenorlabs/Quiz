@@ -340,6 +340,7 @@
         }
     ];
 
+    const choiceLabel = ["A", "B", "C", "D"]
     let participants = [];
     let currentQuestion = 0;
     let numQuestions = 5;
@@ -375,7 +376,6 @@
             return;
         }
 
-        const choiceLabel = ["A", "B", "C", "D"]
         const q = triviaQuestions[currentQuestion];
         $('#questionNumber').text(`Question ${currentQuestion + 1} of ${numQuestions}`);
         $('#questionText').text(q.question);
@@ -466,7 +466,7 @@
                 if (isCorrect) correct++;
                 const answerText = answer.selected >= 0 ? answer.options[answer.selected] : 'No answer';
                 const className = isCorrect ? 'correct' : 'incorrect';
-                rowHtml += `<td class="${className}">${answerText}</td>`;
+                rowHtml += `<td class="${className}">${choiceLabel[answer.selected]}</td>`;
             });
 
             rowHtml += `<td><strong>${correct}/${numQuestions}</strong></td></tr>`;
