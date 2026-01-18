@@ -127,26 +127,29 @@
         .participant-answer {
             background: #f8f9fa;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            padding: 5px 20px;
+            margin-bottom: 5px;
+            justify-content: space-between;
         }
 
         .participant-name {
             font-weight: 600;
             color: #667eea;
-            margin-bottom: 15px;
             font-size: 18px;
+            margin-right: 15px;
         }
 
         .answer-options {
-            display: grid;
+            display: flex;
             gap: 10px;
         }
 
         .answer-option {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 8px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             cursor: pointer;
@@ -222,6 +225,7 @@
         <div class="question-header">
             <div class="question-number" id="questionNumber"></div>
             <div class="question-text" id="questionText"></div>
+            <div class="answer-list" id="answerList"></div>
         </div>
         <div id="participantAnswers"></div>
         <button class="btn" id="doneBtn">Done</button>
@@ -237,6 +241,53 @@
 
 <script>
     const triviaQuestions = [
+        {
+            "question": "According to James 3:1, what will those who become teachers receive?",
+            "options": [
+                "Great trials",
+                "Praise",
+                "A crown of life",
+                "A stricter judgment"
+            ],
+            "correct": 3
+        }, {
+            "question": "According to James 3:2, we all stumble in what?",
+            "options": [
+                "A few things",
+                "Many things",
+                "Hatred",
+                "Pride"
+            ],
+            "correct": 1
+        }, {
+            "question": "According to James 3:3, what is the reason that we put bits in horses’ mouths?",
+            "options": [
+                "To hurt them",
+                "To keep them from biting",
+                "So that they obey us",
+                "To attach the harness"
+            ],
+            "correct": 2
+        }, {
+            "question": "According, to James 3:5, the tongue boasts of what?",
+            "options": [
+                "Great things",
+                "Selfish accomplishments",
+                "Lies",
+                "Evil"
+            ],
+            "correct": 0
+        }, {
+            "question": "According, to James 3:6, the tongue is so set among the members that it does what to the whole body?",
+            "options": [
+                "Destroys it",
+                "Helps it",
+                "Blesses it",
+                "Defiles it"
+            ],
+            "correct": 3
+        },
+
         {
             question: "What is the capital of France?",
             options: ["London", "Berlin", "Paris", "Madrid"],
@@ -324,9 +375,17 @@
             return;
         }
 
+        const choiceLabel = ["A", "B", "C", "D"]
         const q = triviaQuestions[currentQuestion];
         $('#questionNumber').text(`Question ${currentQuestion + 1} of ${numQuestions}`);
         $('#questionText').text(q.question);
+
+        $('#answerList').empty();
+        q.options.forEach((option, oIdx) => {
+            const $answerDiv = $('<div class="answer" id="answer${oIdx}"></div>');
+            $answerDiv.text(`${choiceLabel[oIdx]}. ${option}`)
+            $('#answerList').append($answerDiv);
+        });
 
         const $answersContainer = $('#participantAnswers');
         $answersContainer.empty();
@@ -340,8 +399,7 @@
                 const radioId = `q${currentQuestion}_p${pIdx}_o${oIdx}`;
                 const $option = $(`
                         <div class="answer-option" data-participant="${pIdx}" data-option="${oIdx}">
-                            <input type="radio" name="q${currentQuestion}_p${pIdx}" id="${radioId}" value="${oIdx}">
-                            <label for="${radioId}">${option}</label>
+                            ${choiceLabel[oIdx]}
                         </div>
                     `);
                 $optionsDiv.append($option);
@@ -356,7 +414,6 @@
             const participant = $this.data('participant');
             $(`.answer-option[data-participant="${participant}"]`).removeClass('selected');
             $this.addClass('selected');
-            $this.find('input[type="radio"]').prop('checked', true);
         });
 
         $('.question-screen').addClass('active');
