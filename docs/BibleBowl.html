@@ -556,6 +556,7 @@
 
     const choiceLabel = ["A", "B", "C", "D"]
     let participants = [];
+    let quizQuestions = [];
     let currentQuestion = 0;
     let numQuestions = 5;
     let answers = {};
@@ -572,12 +573,29 @@
         }
     });
 
+    function pickInOrder(items, count) {
+        // 1. Create an array of all possible indices
+        const indices = items.map((_, i) => i);
+
+        // 2. Shuffle indices and take 'count' of them
+        const selectedIndices = indices
+            .sort(() => Math.random() - 0.5)
+            .slice(0, count)
+            // 3. Sort indices numerically to restore original order
+            .sort((a, b) => a - b);
+
+        // 4. Map indices back to original values
+        return selectedIndices.map(i => items[i]);
+    }
+
     $('#startBtn').on('click', function() {
         if (participants.length === 0) {
             alert('Please add at least one participant');
             return;
         }
+
         numQuestions = Math.min(parseInt($('#numQuestions').val()), triviaQuestions.length);
+        quizQuestions = pickInOrder(triviaQuestions, numQuestions);
         answers = {};
         currentQuestion = 0;
         $('.setup-screen').removeClass('active');
@@ -590,7 +608,7 @@
             return;
         }
 
-        const q = triviaQuestions[currentQuestion];
+        const q = quizQuestions[currentQuestion];
         $('#questionNumber').text(`Question ${currentQuestion + 1} of ${numQuestions}`);
         $('#questionText').text(q.question);
 
@@ -636,7 +654,7 @@
     }
 
     $('#doneBtn').on('click', function() {
-        const q = triviaQuestions[currentQuestion];
+        const q = quizQuestions[currentQuestion];
 
         participants.forEach((participant, pIdx) => {
             const selected = $(`input[name="q${currentQuestion}_p${pIdx}"]:checked`).val();
