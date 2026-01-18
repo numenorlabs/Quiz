@@ -51,7 +51,7 @@
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 2px;
             color: #333;
             font-weight: 600;
         }
@@ -121,7 +121,11 @@
         .question-text {
             font-size: 24px;
             color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 12px;
+        }
+
+        .answer-text {
+            font-size: 18px;
         }
 
         .participant-answer {
@@ -175,10 +179,11 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 12px;
         }
 
         .results-table th, .results-table td {
-            padding: 12px;
+            padding: 2px;
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
         }
@@ -382,7 +387,7 @@
 
         $('#answerList').empty();
         q.options.forEach((option, oIdx) => {
-            const $answerDiv = $('<div class="answer" id="answer${oIdx}"></div>');
+            const $answerDiv = $('<div class="answer-text" id="answer${oIdx}"></div>');
             $answerDiv.text(`${choiceLabel[oIdx]}. ${option}`)
             $('#answerList').append($answerDiv);
         });
