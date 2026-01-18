@@ -1,0 +1,11 @@
+I want to create a single-page web app to ask a series of trivia questions and record the answers for the participants.  Each question should be multiple choice with four possible answers.  For each question, I should be able to record the answer given by each participant.  When I click the "Done" button, it should take me to the next question.  When all questions have been answered, it should show a screen with the individual results.  Use only HTML, CSS and jQuery.
+
+I'll create a trivia app for you that lets you record answers for multiple participants across a series of questions.I've created a trivia app that allows you to:
+
+1. **Add participants** - Type names and press Enter to add them
+2. **Set number of questions** - Choose how many questions to ask (1-20)
+3. **Record answers** - For each question, select an answer for each participant by clicking on the answer options
+4. **Navigate questions** - Click "Done" to move to the next question
+5. **View results** - After all questions, see a table showing each participant's answers and scores
+
+The app comes pre-loaded with 10 sample trivia questions. Each question shows clearly which participant is answering, and you can click directly on the answer choice to select it. The results screen color-codes correct (green) and incorrect (red) answers and shows each participant's total score.

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Answer Recorder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .setup-screen, .question-screen, .results-screen {
+            display: none;
+        }
+
+        .setup-screen.active, .question-screen.active, .results-screen.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .participant-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .participant-tag {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .question-header {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .participant-answer {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .participant-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .answer-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .answer-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .answer-option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .answer-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .answer-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results-table th, .results-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .results-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .results-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .correct {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .incorrect {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Setup Screen -->
+    <div class="setup-screen active">
+        <h1>Quiz Setup</h1>
+        <div class="input-group">
+            <label for="participantName">Add Participants</label>
+            <input type="text" id="participantName" placeholder="Enter participant name and press Enter">
+            <div class="participant-list" id="participantList"></div>
+        </div>
+        <div class="input-group">
+            <label for="numQuestions">Number of Questions</label>
+            <input type="number" id="numQuestions" value="5" min="1" max="20">
+        </div>
+        <button class="btn" id="startBtn">Start Trivia</button>
+    </div>
+
+    <!-- Question Screen -->
+    <div class="question-screen">
+        <div class="question-header">
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question-text" id="questionText"></div>
+        </div>
+        <div id="participantAnswers"></div>
+        <button class="btn" id="doneBtn">Done</button>
+    </div>
+
+    <!-- Results Screen -->
+    <div class="results-screen">
+        <h1>Results</h1>
+        <table class="results-table" id="resultsTable"></table>
+        <button class="btn" id="restartBtn">Start New Trivia</button>
+    </div>
+</div>
+
+<script>
+    const triviaQuestions = [
+        {
+            question: "What is the capital of France?",
+            options: ["London", "Berlin", "Paris", "Madrid"],
+            correct: 2
+        },
+        {
+            question: "Which planet is known as the Red Planet?",
+            options: ["Venus", "Mars", "Jupiter", "Saturn"],
+            correct: 1
+        },
+        {
+            question: "Who painted the Mona Lisa?",
+            options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+            correct: 2
+        },
+        {
+            question: "What is the largest ocean on Earth?",
+            options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+            correct: 3
+        },
+        {
+            question: "In what year did World War II end?",
+            options: ["1943", "1944", "1945", "1946"],
+            correct: 2
+        },
+        {
+            question: "What is the smallest prime number?",
+            options: ["0", "1", "2", "3"],
+            correct: 2
+        },
+        {
+            question: "Which element has the chemical symbol 'Au'?",
+            options: ["Silver", "Gold", "Copper", "Aluminum"],
+            correct: 1
+        },
+        {
+            question: "How many continents are there?",
+            options: ["5", "6", "7", "8"],
+            correct: 2
+        },
+        {
+            question: "Who wrote 'Romeo and Juliet'?",
+            options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+            correct: 1
+        },
+        {
+            question: "What is the speed of light?",
+            options: ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
+            correct: 0
+        }
+    ];
+
+    let participants = [];
+    let currentQuestion = 0;
+    let numQuestions = 5;
+    let answers = {};
+
+    // Setup screen handlers
+    $('#participantName').on('keypress', function(e) {
+        if (e.which === 13) {
+            const name = $(this).val().trim();
+            if (name && !participants.includes(name)) {
+                participants.push(name);
+                $('#participantList').append(`<div class="participant-tag">${name}</div>`);
+                $(this).val('');
+            }
+        }
+    });
+
+    $('#startBtn').on('click', function() {
+        if (participants.length === 0) {
+            alert('Please add at least one participant');
+            return;
+        }
+        numQuestions = Math.min(parseInt($('#numQuestions').val()), triviaQuestions.length);
+        answers = {};
+        currentQuestion = 0;
+        $('.setup-screen').removeClass('active');
+        showQuestion();
+    });
+
+    function showQuestion() {
+        if (currentQuestion >= numQuestions) {
+            showResults();
+            return;
+        }
+
+        const q = triviaQuestions[currentQuestion];
+        $('#questionNumber').text(`Question ${currentQuestion + 1} of ${numQuestions}`);
+        $('#questionText').text(q.question);
+
+        const $answersContainer = $('#participantAnswers');
+        $answersContainer.empty();
+
+        participants.forEach((participant, pIdx) => {
+            const $participantDiv = $('<div class="participant-answer"></div>');
+            $participantDiv.append(`<div class="participant-name">${participant}</div>`);
+
+            const $optionsDiv = $('<div class="answer-options"></div>');
+            q.options.forEach((option, oIdx) => {
+                const radioId = `q${currentQuestion}_p${pIdx}_o${oIdx}`;
+                const $option = $(`
+                        <div class="answer-option" data-participant="${pIdx}" data-option="${oIdx}">
+                            <input type="radio" name="q${currentQuestion}_p${pIdx}" id="${radioId}" value="${oIdx}">
+                            <label for="${radioId}">${option}</label>
+                        </div>
+                    `);
+                $optionsDiv.append($option);
+            });
+
+            $participantDiv.append($optionsDiv);
+            $answersContainer.append($participantDiv);
+        });
+
+        $('.answer-option').on('click', function() {
+            const $this = $(this);
+            const participant = $this.data('participant');
+            $(`.answer-option[data-participant="${participant}"]`).removeClass('selected');
+            $this.addClass('selected');
+            $this.find('input[type="radio"]').prop('checked', true);
+        });
+
+        $('.question-screen').addClass('active');
+    }
+
+    $('#doneBtn').on('click', function() {
+        const q = triviaQuestions[currentQuestion];
+
+        participants.forEach((participant, pIdx) => {
+            const selected = $(`input[name="q${currentQuestion}_p${pIdx}"]:checked`).val();
+            if (!answers[participant]) {
+                answers[participant] = [];
+            }
+            answers[participant].push({
+                question: q.question,
+                selected: selected !== undefined ? parseInt(selected) : -1,
+                correct: q.correct,
+                options: q.options
+            });
+        });
+
+        currentQuestion++;
+        showQuestion();
+    });
+
+    function showResults() {
+        $('.question-screen').removeClass('active');
+
+        const $table = $('#resultsTable');
+        $table.empty();
+
+        // Create header
+        let headerHtml = '<tr><th>Participant</th>';
+        for (let i = 0; i < numQuestions; i++) {
+            headerHtml += `<th>Q${i + 1}</th>`;
+        }
+        headerHtml += '<th>Score</th></tr>';
+        $table.append(headerHtml);
+
+        // Create rows for each participant
+        participants.forEach(participant => {
+            const participantAnswers = answers[participant] || [];
+            let correct = 0;
+            let rowHtml = `<tr><td><strong>${participant}</strong></td>`;
+
+            participantAnswers.forEach(answer => {
+                const isCorrect = answer.selected === answer.correct;
+                if (isCorrect) correct++;
+                const answerText = answer.selected >= 0 ? answer.options[answer.selected] : 'No answer';
+                const className = isCorrect ? 'correct' : 'incorrect';
+                rowHtml += `<td class="${className}">${answerText}</td>`;
+            });
+
+            rowHtml += `<td><strong>${correct}/${numQuestions}</strong></td></tr>`;
+            $table.append(rowHtml);
+        });
+
+        $('.results-screen').addClass('active');
+    }
+
+    $('#restartBtn').on('click', function() {
+        $('.results-screen').removeClass('active');
+        participants = [];
+        answers = {};
+        currentQuestion = 0;
+        $('#participantList').empty();
+        $('#participantName').val('');
+        $('#numQuestions').val(5);
+        $('.setup-screen').addClass('active');
+    });
+</script>
+</body>
+</html>
