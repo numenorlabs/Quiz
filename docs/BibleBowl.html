@@ -48,6 +48,13 @@
             margin-bottom: 20px;
         }
 
+        .three-columns {
+            display: flex;
+            justify-content: space-between;
+            max-width: 400px;
+            padding-top: 10px;
+        }
+
         label {
             display: block;
             margin-bottom: 2px;
@@ -67,6 +74,10 @@
         input[type="text"]:focus, input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        input[type="checkbox"] {
+            margin: 0 10px;
         }
 
         .participant-list {
@@ -206,12 +217,36 @@
     <div class="setup-screen active">
         <h1>Quiz Setup</h1>
         <div class="input-group">
+            <label>Choose Chapters</label>
+            <div class="three-columns">
+            <div>
+                <label><input type="checkbox" id="james1" name="quizChapter" value="james1">James 1</label><br>
+                <label><input type="checkbox" id="james2" name="quizChapter" value="james2">James 2</label><br>
+                <label><input type="checkbox" id="james3" name="quizChapter" value="james3">James 3</label><br>
+                <label><input type="checkbox" id="james4" name="quizChapter" value="james4">James 4</label><br>
+                <label><input type="checkbox" id="james5" name="quizChapter" value="james5">James 5</label><br>
+            </div>
+            <div>
+                <label><input type="checkbox" id="1peter1" name="quizChapter" value="1peter1">1 Peter 1</label><br>
+                <label><input type="checkbox" id="1peter2" name="quizChapter" value="1peter2">1 Peter 2</label><br>
+                <label><input type="checkbox" id="1peter3" name="quizChapter" value="1peter3">1 Peter 3</label><br>
+                <label><input type="checkbox" id="1peter4" name="quizChapter" value="1peter4">1 Peter 4</label><br>
+                <label><input type="checkbox" id="1peter5" name="quizChapter" value="1peter5">1 Peter 5</label><br>
+            </div>
+            <div>
+                <label><input type="checkbox" id="2peter1" name="quizChapter" value="2peter1">2 Peter 1</label><br>
+                <label><input type="checkbox" id="2peter2" name="quizChapter" value="2peter2">2 Peter 2</label><br>
+                <label><input type="checkbox" id="2peter3" name="quizChapter" value="2peter3">2 Peter 3</label><br>
+            </div>
+            </div>
+        </div>
+        <div class="input-group">
             <label for="participantName">Add Participants</label>
             <input type="text" id="participantName" placeholder="Enter participant name and press Enter">
             <div class="participant-list" id="participantList"></div>
         </div>
         <div class="input-group">
-            <label for="numQuestions">Number of Questions</label>
+            <label for="numQuestions">Number of Questions per Chapter</label>
             <input type="number" id="numQuestions" value="5" min="1" max="20">
         </div>
         <button class="btn" id="startBtn">Start Trivia</button>
@@ -237,315 +272,1065 @@
 </div>
 
 <script>
-    const triviaQuestions = [
-        {
-            "question": "According to James 3:1, what will those who become teachers receive?",
-            "options": [
-                "Great trials",
-                "Praise",
-                "A crown of life",
-                "A stricter judgment"
-            ],
-            "correct": 3
-        }, {
-            "question": "According to James 3:2, we all stumble in what?",
-            "options": [
-                "A few things",
-                "Many things",
-                "Hatred",
-                "Pride"
-            ],
-            "correct": 1
-        }, {
-            "question": "According to James 3:3, what is the reason that we put bits in horses’ mouths?",
-            "options": [
-                "To hurt them",
-                "To keep them from biting",
-                "So that they obey us",
-                "To attach the harness"
-            ],
-            "correct": 2
-        }, {
-            "question": "According, to James 3:5, the tongue boasts of what?",
-            "options": [
-                "Great things",
-                "Selfish accomplishments",
-                "Lies",
-                "Evil"
-            ],
-            "correct": 0
-        }, {
-            "question": "According, to James 3:6, the tongue is so set among the members that it does what to the whole body?",
-            "options": [
-                "Destroys it",
-                "Helps it",
-                "Blesses it",
-                "Defiles it"
-            ],
-            "correct": 3
-        }, {
-            "question": "According, to James 3:7, which of the following is not mentioned to have been tamed by mankind?",
-            "options": [
-                "Reptiles",
-                "The wind",
-                "Creatures of the sea",
-                "Birds"
-            ],
-            "correct": 1
-        }, {
-            "question": "According, to James 3:8, why can no man tame the tongue?",
-            "options": [
-                "Because it is uncontrollable",
-                "Because it is full of wickedness and deceit",
-                "Because it is an unruly evil, full of deadly poison",
-                "Because it is full of a serpent’s venom"
-            ],
-            "correct": 2
-        }, {
-            "question": "According to James 3:10, what two things should not proceed out of the same mouth?",
-            "options": [
-                "Slander and praise",
-                "Blessing and cursing",
-                "Truth and lies",
-                "Cursing and praise"
-            ],
-            "correct": 1
-        }, {
-            "question": "According to James 3:11, he asks if a spring sends forth what types of water?",
-            "options": [
-                "Hot and cold",
-                "Fresh and bitter",
-                "Salt and clear",
-                "Clean and unclean"
-            ],
-            "correct": 1
-        }, {
-            "question": "According, to James 3:12, which of the following is true?",
-            "options": [
-                "A fig tree cannot bear olives",
-                "A grapevine cannot bear figs",
-                "A spring cannot yield both salt water and fresh",
-                "All of the Above"
-            ],
-            "correct": 3
-        }, {
-            "question": "According to James 3:13, how are we to show that our works are done in the meekness of wisdom?",
-            "options": [
-                "By faith",
-                "By good conduct",
-                "With impartiality",
-                "Through trials"
-            ],
-            "correct": 1
-        }, {
-            "question": "According, to James 3:14, if our hearts are full of bitter envy and self-seeking what are we not supposed to do?",
-            "options": [
-                "Boast and lie against the truth",
-                "Show partiality toward the poor",
-                "Bless our God and Father",
-                "Lie against God"
-            ],
-            "correct": 0
-        }, {
-            "question": "According, to James 3:15, which of the following does not describe wisdom from above?",
-            "options": [
-                "Sensual",
-                "Demonic",
-                "Earthly",
-                "All of the above"
-            ],
-            "correct": 3
-        }, {
-            "question": "According to James 3:16, when envy and self-seeking exist, what else is there?",
-            "options": [
-                "Confusion",
-                "Every evil thing",
-                "Both A and B",
-                "Neither A nor B"
-            ],
-            "correct": 2
-        }, {
-            "question": "According, to James 3:17, which of the following is not used to describe wisdom from above?",
-            "options": [
-                "Full of mercy and good fruits",
-                "Peaceable",
-                "Earthly",
-                "Without hypocrisy and partiality"
-            ],
-            "correct": 2
-        }, {
-            "question": "According, to James 3:17, which of the following describes wisdom from above?",
-            "options": [
-                "Pure",
-                "Gentle",
-                "Willing to yield",
-                "All of the above"
-            ],
-            "correct": 3
-        }, {
-            "question": "According, to James 3:18, who sows the fruit of righteousness in peace?",
-            "options": [
-                "Those who show mercy",
-                "Those who humble themselves",
-                "Those who don’t show partiality",
-                "Those who make peace"
-            ],
-            "correct": 3
-        }, {
-            "question": "According to James 4:1, what is said to cause wars and fights among us?",
-            "options": [
-                "Your desires for pleasure",
-                "Your desires for riches",
-                "Your selfish desires",
-                "Your evil desires"
-            ],
-            "correct": 0
-        }, {
-            "question": "According to James 4:2, though you lust, murder, covet, fight, and war, you don’t have what you want for what reason?",
-            "options": [
-                "You don’t have faith",
-                "You doubt when you ask",
-                "You don’t ask",
-                "You ask with selfish motives"
-            ],
-            "correct": 2
-        }, {
-            "question": "According to James 4:3, you ask and don’t receive because you want to spend it on what?",
-            "options": [
-                "Riches",
-                "Pleasures",
-                "Fine apparel",
-                "Frivolous things"
-            ],
-            "correct": 1
-        }, {
-            "question": "According to James 4:4, if we are a friend of the world it makes us what?",
-            "options": [
-                "An enemy of God",
-                "An enemy of righteousness",
-                "A friend of the devil",
-                "A friend of demons"
-            ],
-            "correct": 0
-        }, {
-            "question": "According to James 4:5, how does the Spirit who dwells in us yearn?",
-            "options": [
-                "Zealously",
-                "Jealously",
-                "Lovingly",
-                "Greedily"
-            ],
-            "correct": 1
-        }, {
-            "question": "According to James 4:6, who does God resist?",
-            "options": [
-                "The proud",
-                "Those who show partiality",
-                "The wicked",
-                "The rich"
-            ],
-            "correct": 0
-        }, {
-            "question": "According to James 4:6, to whom does God give grace?",
-            "options": [
-                "The poor",
-                "The righteous",
-                "The humble",
-                "The faithful"
-            ],
-            "correct": 2
-        }, {
-            "question": "According to James 4:7, what will the devil do if a Christian resists him?",
-            "options": [
-                "Resist him",
-                "Flee from him",
-                "Cast him out",
-                "Seek another opportunity"
-            ],
-            "correct": 1
-        }, {
-            "question": "According to James 4:8, what does James tells sinners to do to their hands?",
-            "options": [
-                "Cleanse them",
-                "Purify them",
-                "Pray with them",
-                "Lift them"
-            ],
-            "correct": 0
-        }, {
-            "question": "According to James 4:8, what does James tells sinners to do to their hearts?",
-            "options": [
-                "Cleanse them",
-                "Purify them",
-                "Pray with them",
-                "Lift them"
-            ],
-            "correct": 1
-        }, {
-            "question": "According to James 4:9, what does James tell sinners to let their laughter be turned to?",
-            "options": [
-                "Scorn",
-                "Jealousy",
-                "Mourning",
-                "Righteousness"
-            ],
-            "correct": 2
-        }, {
-            "question": "According to James 4:10, what does James say the Lord will do with one of His children who humbles himself?",
-            "options": [
-                "Lift him up",
-                "Reward him",
-                "Give him the crown of life",
-                "Draw near to him"
-            ],
-            "correct": 0
-        }, {
-            "question": "According to James 4:13, what was the purpose of going into the town and spending a year?",
-            "options": [
-                "To buy, sell, and make a profit",
-                "To seek job opportunities",
-                "To purchase ships",
-                "To visit the orphans and widows in their affliction"
-            ],
-            "correct": 0
-        }, {
-            "question": "According to James 4:14, James compares a person’s life to what?",
-            "options": [
-                "A fire",
-                "A bit",
-                "A vapor",
-                "A ship"
-            ],
-            "correct": 2
-        }, {
-            "question": "According to James 4:15, whose will is important in determining how one will live and what they do?",
-            "options": [
-                "The Lord’s",
-                "Each person’s own",
-                "The judge’s",
-                "The world’s"
-            ],
-            "correct": 0
-        }, {
-            "question": "According to James 4:16, how does James describe boasting in your arrogance?",
-            "options": [
-                "Prideful",
-                "Evil",
-                "Sinful",
-                "Deceptive"
-            ],
-            "correct": 1
-        }, {
-            "question": "According to James 4:17, how does James describe sin?",
-            "options": [
-                "Desire that is conceived and birthed",
-                "Showing partiality",
-                "Faith without works",
-                "Failing to do what you know is good"
-            ],
-            "correct": 3
-        }
-    ];
+    const triviaQuestions = {
+        "james1": [],
+        "james2": [],
+        "james3": [
+            {
+                "question": "According to James 3:1, what will those who become teachers receive?",
+                "options": [
+                    "Great trials",
+                    "Praise",
+                    "A crown of life",
+                    "A stricter judgment"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 3:2, we all stumble in what?",
+                "options": [
+                    "A few things",
+                    "Many things",
+                    "Hatred",
+                    "Pride"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 3:3, what is the reason that we put bits in horses’ mouths?",
+                "options": [
+                    "To hurt them",
+                    "To keep them from biting",
+                    "So that they obey us",
+                    "To attach the harness"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According, to James 3:5, the tongue boasts of what?",
+                "options": [
+                    "Great things",
+                    "Selfish accomplishments",
+                    "Lies",
+                    "Evil"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According, to James 3:6, the tongue is so set among the members that it does what to the whole body?",
+                "options": [
+                    "Destroys it",
+                    "Helps it",
+                    "Blesses it",
+                    "Defiles it"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According, to James 3:7, which of the following is not mentioned to have been tamed by mankind?",
+                "options": [
+                    "Reptiles",
+                    "The wind",
+                    "Creatures of the sea",
+                    "Birds"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According, to James 3:8, why can no man tame the tongue?",
+                "options": [
+                    "Because it is uncontrollable",
+                    "Because it is full of wickedness and deceit",
+                    "Because it is an unruly evil, full of deadly poison",
+                    "Because it is full of a serpent’s venom"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 3:10, what two things should not proceed out of the same mouth?",
+                "options": [
+                    "Slander and praise",
+                    "Blessing and cursing",
+                    "Truth and lies",
+                    "Cursing and praise"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 3:11, he asks if a spring sends forth what types of water?",
+                "options": [
+                    "Hot and cold",
+                    "Fresh and bitter",
+                    "Salt and clear",
+                    "Clean and unclean"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According, to James 3:12, which of the following is true?",
+                "options": [
+                    "A fig tree cannot bear olives",
+                    "A grapevine cannot bear figs",
+                    "A spring cannot yield both salt water and fresh",
+                    "All of the Above"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 3:13, how are we to show that our works are done in the meekness of wisdom?",
+                "options": [
+                    "By faith",
+                    "By good conduct",
+                    "With impartiality",
+                    "Through trials"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According, to James 3:14, if our hearts are full of bitter envy and self-seeking what are we not supposed to do?",
+                "options": [
+                    "Boast and lie against the truth",
+                    "Show partiality toward the poor",
+                    "Bless our God and Father",
+                    "Lie against God"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According, to James 3:15, which of the following does not describe wisdom from above?",
+                "options": [
+                    "Sensual",
+                    "Demonic",
+                    "Earthly",
+                    "All of the above"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 3:16, when envy and self-seeking exist, what else is there?",
+                "options": [
+                    "Confusion",
+                    "Every evil thing",
+                    "Both A and B",
+                    "Neither A nor B"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According, to James 3:17, which of the following is not used to describe wisdom from above?",
+                "options": [
+                    "Full of mercy and good fruits",
+                    "Peaceable",
+                    "Earthly",
+                    "Without hypocrisy and partiality"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According, to James 3:17, which of the following describes wisdom from above?",
+                "options": [
+                    "Pure",
+                    "Gentle",
+                    "Willing to yield",
+                    "All of the above"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According, to James 3:18, who sows the fruit of righteousness in peace?",
+                "options": [
+                    "Those who show mercy",
+                    "Those who humble themselves",
+                    "Those who don’t show partiality",
+                    "Those who make peace"
+                ],
+                "correct": 3
+            }
+        ],
+        "james4": [
+            {
+                "question": "According to James 4:1, what is said to cause wars and fights among us?",
+                "options": [
+                    "Your desires for pleasure",
+                    "Your desires for riches",
+                    "Your selfish desires",
+                    "Your evil desires"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 4:2, though you lust, murder, covet, fight, and war, you don’t have what you want for what reason?",
+                "options": [
+                    "You don’t have faith",
+                    "You doubt when you ask",
+                    "You don’t ask",
+                    "You ask with selfish motives"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 4:3, you ask and don’t receive because you want to spend it on what?",
+                "options": [
+                    "Riches",
+                    "Pleasures",
+                    "Fine apparel",
+                    "Frivolous things"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 4:4, if we are a friend of the world it makes us what?",
+                "options": [
+                    "An enemy of God",
+                    "An enemy of righteousness",
+                    "A friend of the devil",
+                    "A friend of demons"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 4:5, how does the Spirit who dwells in us yearn?",
+                "options": [
+                    "Zealously",
+                    "Jealously",
+                    "Lovingly",
+                    "Greedily"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 4:6, who does God resist?",
+                "options": [
+                    "The proud",
+                    "Those who show partiality",
+                    "The wicked",
+                    "The rich"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 4:6, to whom does God give grace?",
+                "options": [
+                    "The poor",
+                    "The righteous",
+                    "The humble",
+                    "The faithful"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 4:7, what will the devil do if a Christian resists him?",
+                "options": [
+                    "Resist him",
+                    "Flee from him",
+                    "Cast him out",
+                    "Seek another opportunity"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 4:8, what does James tells sinners to do to their hands?",
+                "options": [
+                    "Cleanse them",
+                    "Purify them",
+                    "Pray with them",
+                    "Lift them"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 4:8, what does James tells sinners to do to their hearts?",
+                "options": [
+                    "Cleanse them",
+                    "Purify them",
+                    "Pray with them",
+                    "Lift them"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 4:9, what does James tell sinners to let their laughter be turned to?",
+                "options": [
+                    "Scorn",
+                    "Jealousy",
+                    "Mourning",
+                    "Righteousness"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 4:10, what does James say the Lord will do with one of His children who humbles himself?",
+                "options": [
+                    "Lift him up",
+                    "Reward him",
+                    "Give him the crown of life",
+                    "Draw near to him"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 4:13, what was the purpose of going into the town and spending a year?",
+                "options": [
+                    "To buy, sell, and make a profit",
+                    "To seek job opportunities",
+                    "To purchase ships",
+                    "To visit the orphans and widows in their affliction"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 4:14, James compares a person’s life to what?",
+                "options": [
+                    "A fire",
+                    "A bit",
+                    "A vapor",
+                    "A ship"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 4:15, whose will is important in determining how one will live and what they do?",
+                "options": [
+                    "The Lord’s",
+                    "Each person’s own",
+                    "The judge’s",
+                    "The world’s"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 4:16, how does James describe boasting in your arrogance?",
+                "options": [
+                    "Prideful",
+                    "Evil",
+                    "Sinful",
+                    "Deceptive"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 4:17, how does James describe sin?",
+                "options": [
+                    "Desire that is conceived and birthed",
+                    "Showing partiality",
+                    "Faith without works",
+                    "Failing to do what you know is good"
+                ],
+                "correct": 3
+            }
+        ],
+        "james5": [
+            {
+                "question": "According, to James 5:1, what were the rich to do because of the miseries coming upon them?",
+                "options": [
+                    "Weep and howl",
+                    "Mourn and cry",
+                    "Scream and yell",
+                    "Laugh and shout"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 5:2, what happened to the garments of the rich?",
+                "options": [
+                    "They were destroyed",
+                    "They were moth-eaten",
+                    "They were burned",
+                    "They were corrupted"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 5:2, what happened to the riches?",
+                "options": [
+                    "They were moth-eaten",
+                    "They were destroyed",
+                    "They were corrupted",
+                    "They were burned"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:3, the corrosion of the silver and gold will act as what against the rich?",
+                "options": [
+                    "A humiliation",
+                    "A judge",
+                    "A condemnation",
+                    "A witness"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 5:4, whose ears have the cries of the reapers reached?",
+                "options": [
+                    "The Lord of Sabaoth",
+                    "The landlord",
+                    "The farmer",
+                    "The judge"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 5:5, what happened to those who lived in pleasure and luxury?",
+                "options": [
+                    "They corrupted their hearts",
+                    "They hardened their hearts",
+                    "They fattened their hearts",
+                    "They destroyed their hearts"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:6, what happened to the just?",
+                "options": [
+                    "They murdered him",
+                    "They rewarded him",
+                    "They corrupted him",
+                    "They blessed him"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 5:7, what were the brethren to do until the coming of the Lord?",
+                "options": [
+                    "Be obedient",
+                    "Be humble",
+                    "Be patient",
+                    "Be watchful"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:8, the brethren were told to be patient and to establish their ________?",
+                "options": [
+                    "Love",
+                    "Future",
+                    "Alibis",
+                    "Hearts"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 5:9, what would happen to the brethren if they grumbled against one another?",
+                "options": [
+                    "They would be punished",
+                    "They would be condemned",
+                    "They would be murdered",
+                    "They would be judged"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 5:9, who was standing at the door?",
+                "options": [
+                    "The Judge",
+                    "The Lord of Sabaoth",
+                    "The reaper",
+                    "The prophets"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 5:10, which of the following was used as an example of suffering and patience?",
+                "options": [
+                    "The reapers",
+                    "The laborers",
+                    "The prophets",
+                    "The brethren"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:11, who was used as an example of perseverance?",
+                "options": [
+                    "Elijah",
+                    "Noah",
+                    "Abraham",
+                    "Job"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 5:12, what were the brethren not to do?",
+                "options": [
+                    "Judge",
+                    "Murder",
+                    "Condemn",
+                    "Swear"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 5:12, what could the brethren fall into?",
+                "options": [
+                    "Temptation",
+                    "Condemnation",
+                    "Judgment",
+                    "Trials"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:13, what are those who are suffering to do?",
+                "options": [
+                    "Sing psalms",
+                    "Consider it all joy",
+                    "Pray",
+                    "Curse God and die"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:13, what are those who are cheerful to do?",
+                "options": [
+                    "Sing psalms",
+                    "Rejoice",
+                    "Pray",
+                    "Visit the suffering"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 5:14, what are those who are sick to do?",
+                "options": [
+                    "Sing psalms",
+                    "Consider it all joy",
+                    "See the doctor",
+                    "Call for the elders"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 5:14, what should the elders do for those who are sick?",
+                "options": [
+                    "Pray over him",
+                    "Anoint him with oil",
+                    "Pray over him and anoint him with oil",
+                    "Pray over him, anoint him with oil, and bless him"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:15, what type of prayer will save the sick?",
+                "options": [
+                    "A sincere prayer",
+                    "A prayer of faith",
+                    "An elder's prayer",
+                    "A prayer of gratitude"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 5:16, what is the result of confessing trespasses and praying for one another?",
+                "options": [
+                    "A heavenly reward",
+                    "Unity",
+                    "Lacking in nothing",
+                    "Healing"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 5:16, whose effective, fervent prayer avails much?",
+                "options": [
+                    "The elder's prayer",
+                    "The apostle's prayer",
+                    "The righteous man's prayer",
+                    "The brethren's prayer"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to James 5:17, who prayed that it would not rain?",
+                "options": [
+                    "Job",
+                    "Elijah",
+                    "Abraham",
+                    "Rahab"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 5:17, how long did it not rain on the land after Elijah prayed?",
+                "options": [
+                    "Two years and six months",
+                    "Three years and six months",
+                    "Six years and two months",
+                    "Six years and three months"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to James 5:18, when Elijah prayed the second time, who or what gave the rain?",
+                "options": [
+                    "Heaven",
+                    "Clouds from Heaven",
+                    "Thunder from Heaven",
+                    "The Lord"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to James 5:19-20, from what does a sinner wander?",
+                "options": [
+                    "The faith",
+                    "The church",
+                    "The Lord",
+                    "The truth"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to James 5:20, what is the result of turning a sinner from the error of his ways?",
+                "options": [
+                    "A greater reward",
+                    "Peace with God",
+                    "Covers a multitude of sins",
+                    "Abundant faith"
+                ],
+                "correct": 2
+            }
+        ],
+        "1peter1": [
+            {
+                "question": "According to 1 Peter 1:1, who is the author?",
+                "options": [
+                    "Paul",
+                    "John",
+                    "Luke",
+                    "Peter"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:1, what is Peter to Jesus Christ?",
+                "options": [
+                    "An apostle",
+                    "A bond servant",
+                    "A brother",
+                    "A disciple"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:1, Peter was writing to the pilgrims of the Dispersion in all of the following places, EXCEPT which one?",
+                "options": [
+                    "Pontus",
+                    "Macedonia",
+                    "Asia",
+                    "Galatia"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to 1 Peter 1:2, the pilgrims of the Dispersion are the elect according to what?",
+                "options": [
+                    "The foreknowledge of God the Father",
+                    "The genuineness of their faith",
+                    "The prophets",
+                    "The sincere love of the brethren"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:3, what attribute of God has begotten us again to a living hope?",
+                "options": [
+                    "His abundant mercy",
+                    "His omnipotence",
+                    "His unconditional love",
+                    "His endless grace"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:4, how is our inheritance described?",
+                "options": [
+                    "Incorruptible",
+                    "Undefiled",
+                    "Does not fade away",
+                    "All of the above"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:4, where is our inheritance reserved?",
+                "options": [
+                    "In the kingdom",
+                    "In Heaven",
+                    "With the Lord",
+                    "In our hearts"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:5, we are kept by the power of God through faith for what?",
+                "options": [
+                    "Salvation",
+                    "Righteousness",
+                    "Judgment",
+                    "Glory"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:6, though we greatly rejoice, by what have we been grieved?",
+                "options": [
+                    "The temptations of Satan",
+                    "Youthful lusts",
+                    "The saints who have fallen asleep",
+                    "Various trials"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:7, the genuineness of our faith is much more precious than what?",
+                "options": [
+                    "Gold that perishes",
+                    "Silver that tarnishes",
+                    "Jewels that fade",
+                    "Silk that is moth-eaten"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:7, the genuineness of our faith is tested by what?",
+                "options": [
+                    "Trials",
+                    "Fire",
+                    "Satan",
+                    "Tribulations"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:8, even though we do not see Jesus Christ, what do we do?",
+                "options": [
+                    "Believe",
+                    "Rejoice with joy",
+                    "Both A and B",
+                    "Neither A nor B"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to 1 Peter 1:9, what is the end of our faith?",
+                "options": [
+                    "A heavenly home",
+                    "The salvation of our souls",
+                    "Eternal joy",
+                    "A reward from the Lord"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:10, what have the prophets inquired about and searched carefully for?",
+                "options": [
+                    "The second coming of Christ",
+                    "The coming Messiah",
+                    "The resurrection of Christ",
+                    "This salvation"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:10, what did the prophets prophesy about?",
+                "options": [
+                    "The peace that passes understanding",
+                    "Suffering and patience",
+                    "The fruits of righteousness",
+                    "The grace that would come"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:11, what did the Spirit of Christ testify beforehand to the prophets?",
+                "options": [
+                    "The sufferings of Christ",
+                    "The birth of Christ",
+                    "The end of time",
+                    "The resurrection"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:11, what did the Spirit of Christ testify would follow the sufferings of Christ?",
+                "options": [
+                    "Death",
+                    "Glories",
+                    "Hope",
+                    "Salvation"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:12, the message of the prophets was being preached as the gospel by whom?",
+                "options": [
+                    "God the Father",
+                    "Jesus Christ",
+                    "The Holy Spirit",
+                    "Peter"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to 1 Peter 1:12, who desires to look into the things being preached?",
+                "options": [
+                    "Angels",
+                    "Demons",
+                    "Apostles",
+                    "All men"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:13, we are instructed to gird up the loins of our what?",
+                "options": [
+                    "Garments",
+                    "Body",
+                    "Mind",
+                    "Heart"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to 1 Peter 1:13, we are to be sober and rest our hope upon what?",
+                "options": [
+                    "The message of the prophets",
+                    "The gospel of the Holy Spirit",
+                    "The justice of God on judgment day",
+                    "The grace to be brought at the revelation of Jesus Christ"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:14, what kind of children are we instructed to be?",
+                "options": [
+                    "Fruitful",
+                    "Obedient",
+                    "Unashamed",
+                    "Innocent"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:14, in our ignorance what did we conform to?",
+                "options": [
+                    "Former lusts",
+                    "Idol worship",
+                    "False doctrine",
+                    "Idle gossip"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:15, why are we to be holy in all our conduct?",
+                "options": [
+                    "Because of the hope of salvation,",
+                    "Because of the resurrection,",
+                    "Because He who called us is holy",
+                    "Because we are obedient children"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to 1 Peter 1:17, who judges without partiality?",
+                "options": [
+                    "The Spirit",
+                    "The Father",
+                    "Angels",
+                    "The Righteous Judge"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:17, the Father judges us according to what?",
+                "options": [
+                    "The motives in our hearts",
+                    "Each one's work",
+                    "The Scriptures",
+                    "His abundant mercy"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:17, throughout the time of our stay here, we are to conduct ourselves in what?",
+                "options": [
+                    "In love",
+                    "In righteousness",
+                    "In holiness",
+                    "In fear"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:18, what kinds of things are corruptible?",
+                "options": [
+                    "The hearts of men",
+                    "Earthly treasures",
+                    "Silver or gold",
+                    "Bronze or iron"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to 1 Peter 1:18, from whom did we receive our aimless conduct by tradition?",
+                "options": [
+                    "Our fathers",
+                    "The elders",
+                    "The Pharisees",
+                    "Satan"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:18-19, with what were we redeemed?",
+                "options": [
+                    "The precious blood of Christ",
+                    "Silver or gold",
+                    "Incorruptible things",
+                    "Each one's work"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:20, when was Christ foreordained?",
+                "options": [
+                    "On the first day of creation",
+                    "In these last times",
+                    "On the Day of Pentecost",
+                    "Before the foundation of the world"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:20, when was Christ manifested for us?",
+                "options": [
+                    "Before the foundation of the world",
+                    "When He suffered on the cross",
+                    "In these last times",
+                    "When He was resurrected"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "According to 1 Peter 1:20-21, we believe in God through whom?",
+                "options": [
+                    "Christ",
+                    "The Holy Spirit",
+                    "The Gospel",
+                    "The prophets"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:21, God raised Christ from the dead and gave Him glory so that we would have what?",
+                "options": [
+                    "Eternal life",
+                    "Faith and hope in God",
+                    "Salvation",
+                    "A Savior"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:22, how do Christians purify their souls?",
+                "options": [
+                    "By obeying the truth through the Spirit",
+                    "By praying to God almighty through Jesus Christ",
+                    "By reading the scriptures daily",
+                    "By singing hymns, psalms, and spiritual songs"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "According to 1 Peter 1:22, how are Christians to love one another?",
+                "options": [
+                    "Eternally with joy",
+                    "Righteously with understanding",
+                    "Vigorously with all your mind",
+                    "Fervently with a pure heart"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:23, when people are born again, of what kind of seed are they born?",
+                "options": [
+                    "Corruptible",
+                    "Incorruptible",
+                    "Everlasting",
+                    "Precious"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "According to 1 Peter 1:23, what does the word of God do forever?",
+                "options": [
+                    "Gives and receives",
+                    "Nourishes and provides",
+                    "Lives and abides",
+                    "Teaches and admonishes"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "In 1 Peter 1:24, to what is all flesh compared?",
+                "options": [
+                    "Grass",
+                    "Herbs",
+                    "Sin",
+                    "Wind"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "In 1 Peter 1:24, to what is the glory of man compared?",
+                "options": [
+                    "Dust of the ground",
+                    "Dew of the mist",
+                    "Flower of the grass",
+                    "Ashes of the fire"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "In 1 Peter 1:24, what happens to the grass?",
+                "options": [
+                    "Withers",
+                    "Gets cut",
+                    "Grows",
+                    "Falls away"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "In 1 Peter 1:24, what happens to the flower?",
+                "options": [
+                    "Withers",
+                    "Blooms",
+                    "Sprouts",
+                    "Falls away"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "According to 1 Peter 1:25, how was the word preached to the people?",
+                "options": [
+                    "By the disciples",
+                    "By the gospel",
+                    "By the Spirit",
+                    "By Christ"
+                ],
+                "correct": 1
+            }
+        ],
+        "1peter2": [],
+        "1peter3": [],
+        "1peter4": [],
+        "1peter5": [],
+        "2peter1": [],
+        "2peter2": [],
+        "2peter3": []
+    };
 
     const choiceLabel = ["A", "B", "C", "D"]
     let participants = [];
@@ -581,14 +1366,32 @@
         return selectedIndices.map(i => items[i]);
     }
 
+    function pickQuizQuestions(quizQuestions, quizChapters, numQuestions) {
+        let questions = [];
+        quizChapters.forEach(chapter => {
+            let chapterQuestions = quizQuestions[chapter];
+            let count = Math.min(numQuestions, chapterQuestions.length);
+            questions.push(...pickInOrder(chapterQuestions, count));
+        })
+        return questions;
+    }
+
     $('#startBtn').on('click', function() {
+        let quizChapters = [...document.querySelectorAll('input[name=quizChapter]:checked')]
+            .map(e => e.id);
+        if (quizChapters.length === 0) {
+            alert('Please select at least one chapter');
+            return;
+        }
+
         if (participants.length === 0) {
             alert('Please add at least one participant');
             return;
         }
 
-        numQuestions = Math.min(parseInt($('#numQuestions').val()), triviaQuestions.length);
-        quizQuestions = pickInOrder(triviaQuestions, numQuestions);
+        let questionsPerChapter = parseInt($('#numQuestions').val())
+        quizQuestions = pickQuizQuestions(triviaQuestions, quizChapters, questionsPerChapter);
+        numQuestions = quizQuestions.length;
         answers = {};
         currentQuestion = 0;
         $('.setup-screen').removeClass('active');
