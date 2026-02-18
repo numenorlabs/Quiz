@@ -55,6 +55,18 @@
             padding-top: 10px;
         }
 
+        .chapter-selector {
+            display: flex;
+            padding-bottom: 8px;
+            & input {
+                margin: 5px 10px;
+            }
+            & .detail {
+                font-size: 12px;
+                font-family: sans-serif;
+            }
+        }
+
         label {
             display: block;
             margin-bottom: 2px;
@@ -74,10 +86,6 @@
         input[type="text"]:focus, input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
-        }
-
-        input[type="checkbox"] {
-            margin: 0 10px;
         }
 
         .participant-list {
@@ -342,9 +350,17 @@
         chunks.forEach(chapters => {
             const $columnDiv = $('<div></div>');
             chapters.forEach(chapter => {
-                $columnDiv.append(
-                    `<label><input type="checkbox" name="quizChapter" value="${chapter}">${chapter}</label><br>`
+                const inputId = chapter.replaceAll(' ', '').toLowerCase();
+                const $selectorDiv = $(
+`            <div class="chapter-selector">
+                <input type="checkbox" id="${inputId}" name="quizChapter" value="${chapter}">
+                    <div>
+                        <label for="${inputId}">${chapter}</label>
+                        <div class="detail">${chaptersJson[chapter].length} questions</div>
+                    </div>
+            </div>`
                 );
+                $columnDiv.append($selectorDiv);
             })
             $('#chapter-columns').append($columnDiv);
         });

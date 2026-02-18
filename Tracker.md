@@ -2,7 +2,7 @@
 - [x] Add James 5 and 1 Peter 1 questions ✅ 2026-02-07
 - [x] Choose questions by chapter ✅ 2026-02-07
 - [x] Upload questions from local file ✅ 2026-02-14
-- [ ] Show number of questions below chapter name
+- [x] Show number of questions below chapter name ✅ 2026-02-16
 - [ ] Question review page
 - [ ] Sort students by number answered right
 - [ ] Show correct answer after all answers entered
